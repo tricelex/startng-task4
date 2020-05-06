@@ -1,30 +1,35 @@
 import random
 
-print("Welcome to PyBank!!")
-print("1 Staff Login")
-print("2 Close App\n")
 
+def login(chk=1):
+	if chk == 1:
+		username = input("What is your username: ")
+		password = input("What is your password: ")
 
-def login():
-	username = input("What is your username: ")
-	password = input("What is your password: ")
+		state = None
+		staff_file = open("staff.txt", "r")
+		staff = eval(staff_file.read())
+		staff_file.close()
 
-	staff_file = open("staff.txt", "r")
-	staff = eval(staff_file.read())
-	staff_file.close()
-
-	exist = False
-	for count in range(len(staff)):
-		if username == staff[count][0]:
-			exist = True
-			if password == staff[count][1]:
-				print("Logged in")
-			else:
-				print("Incorrect Password")
-				login()
-	if not exist:
-		print("Invalid Username")
-		login()
+		exist = False
+		for count in range(len(staff)):
+			if username == staff[count][0]:
+				exist = True
+				if password == staff[count][1]:
+					print("Logged in")
+					state = True
+				else:
+					print("Incorrect Password try again")
+					login()
+					state = True
+		if not exist:
+			print("Invalid Username try again")
+			login()
+			state = True
+		return state
+	elif chk == 2:
+		state = True
+		return state
 
 
 def create_bank_account():
@@ -62,13 +67,39 @@ def check_account_details():
 		print('You have entered an invalid account number')
 
 
+def show_menu():
+	print("1 Create new bank account")
+	print("2 Check Account Details")
+	print("3 Logout")
+	choice1 = int(input("Enter a value 1, 2 or 3: "))
+	return choice1
+
+
 def logout():
-	pass
+	print("Thank you for using pyBank!!")
+	exit()
 
 
 def main():
-	pass
+	print("Welcome to PyBank!!")
+	print("1 Staff Login")
+	print("2 Close App")
+	choice = int(input("Enter a value 1 or 2: "))
+	if choice == 1:
+		if login():
+			choice1 = show_menu()
+			if choice1 == 1:
+				create_bank_account()
+			elif choice1 == 2:
+				check_account_details()
+			elif choice1 == 3:
+				logout()
+	elif choice == 2:
+		logout()
 
 
 # generate_account_number()
-check_account_details()
+# check_account_details()
+
+if __name__ == '__main__':
+	main()
